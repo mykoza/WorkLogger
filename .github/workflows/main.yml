@@ -39,7 +39,7 @@ jobs:
           release_name="WorkLogger-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish WorkLogger.csproj --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+          dotnet publish WorkLogger.csproj --runtime "${{ matrix.target }}" -c Release -o "$release_name" --no-self-contained
 
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
