@@ -95,7 +95,7 @@ public class WorkLog
             " | ", 
             Records
                 .Where(record => record.Time > TimeSpan.Zero)
-                .Select(record => $"{record.Name}: {record.Time.ToString(@"%m")}m")
+                .Select(record => $"{record.Name}: {FormatTimeSpan(record.Time)}")
         );
     }
 
@@ -119,8 +119,22 @@ public class WorkLog
                         Time = times.Aggregate((agg, time) => agg + time)
                     }
                 )
-                .Select(record => $"{record.Name}: {record.Time.ToString(@"%m")}m")
+                .Select(record => $"{record.Name}: {FormatTimeSpan(record.Time)}")
         );
+    }
+
+    private static string FormatTimeSpan(TimeSpan timeSpan)
+    {
+        var res = string.Empty;
+
+        if (timeSpan.Hours == 0)
+        {
+            return $"{timeSpan.Minutes}m";
+        }
+        else
+        {
+            return $"{timeSpan.Hours}h {timeSpan.Minutes}m";
+        }
     }
 
 }

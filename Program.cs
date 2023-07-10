@@ -1,11 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Namespace;
-
-Console.WriteLine("Hello, World!");
+﻿using Namespace;
 
 var log = new WorkLog();
-// log.AddRecord(new WorkLogRecord("HD", new DateTime(2022, 7,6,8,0,0), new DateTime(2022, 7,6,8,30,0)));
-// log.AddRecord(new WorkLogRecord("Meetings", new DateTime(2022, 7,6,8,30,0), new DateTime(2022, 7,6,9,0,0)));
 
 while (true)
 {
@@ -43,6 +38,4 @@ while (true)
         Console.Write("Index out of range. Press enter to try again.");
         Console.ReadLine();
     }
-
-    // Console.WriteLine(input);
 }
