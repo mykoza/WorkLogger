@@ -1,0 +1,20 @@
+Total time: 1h 5m | Remaining time: 6h 25m
+
+Existing recods:
+
+HD: 30m
+Dev: 35m
+
+----------------
+Add new record
+----------------
+Shortcuts: [1 - HD, 2 - Dev]
+Record Name: Meetings (1)
+Time spent: 30m (2)
+
+----------------
+Add new record
+----------------
+Shortcuts: [1 - HD, 2 - Dev, 3 - Meetings]
+Record Name: ... (1)
+Time spent: 30m (2)
