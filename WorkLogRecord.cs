@@ -1,15 +1,32 @@
 namespace Namespace;
 public class WorkLogRecord
 {
-    public string Name { get; set;}
-    public DateTime Start { get; private set; } = DateTime.Now;
-    public DateTime? End { get; private set; }
-    public TimeSpan Time { get; private set; }
+    public string Name { get; set;} = string.Empty;
+    public DateTime Start { get; set; } = DateTime.Now;
+    public DateTime? End { get; set; }
+    public TimeSpan Time { get; set; }
     public string Comment { get; set; } = string.Empty;
+
+    public WorkLogRecord()
+    {
+    }
 
     public WorkLogRecord(string name)
     {
         Name = name;
+    }
+
+    public WorkLogRecord(string name, string start, string? end, string time)
+    {
+        Name = name;
+        Start = DateTime.Parse(start);
+
+        if (end is not null)
+        {
+            End = DateTime.Parse(end);
+        }
+
+        Time = TimeSpan.Parse(time);
     }
 
     public WorkLogRecord(string name, DateTime start, DateTime end)
@@ -35,18 +52,4 @@ public class WorkLogRecord
     {
         return new WorkLogRecord(Name);
     }
-
-    // public WorkLogRecord(string name, TimeSpan time)
-    // {
-    //     Name = name;
-    //     Time = time;
-    // }
-
-    // public WorkLogRecord(string name, TimeSpan time, string comment)
-    // {
-    //     Name = name;
-    //     Time = time;
-    //     Comment = comment;
-    // }
-
 }

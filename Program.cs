@@ -1,6 +1,7 @@
 ﻿using Namespace;
 
 var log = new WorkLog();
+log.Boot();
 
 while (true)
 {
@@ -23,6 +24,7 @@ while (true)
             Console.WriteLine(log.AggregatedTimes());
             Console.Write("Waiting for any key to exit.");
             Console.ReadLine();
+            log.CleanUp();
             break;
         }
 

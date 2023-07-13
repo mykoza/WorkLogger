@@ -1,5 +1,5 @@
-using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Namespace;
 public class WorkLog
@@ -8,7 +8,7 @@ public class WorkLog
     // public List<WorkLogRecord> AggredatedRecords { get; private set; } = new();
     public TimeSpan TotalTime => Records.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
     public TimeSpan FullTime { get; } = new TimeSpan(7, 30, 0);
-    public HashSet<string> Shortcuts { get; private set; } = new() { "HD", "Meetings", "Przerwa" };
+    public HashSet<string> Shortcuts { get; set; } = new() { "HD", "Meetings", "Przerwa" };
 
     public WorkLog()
     {
@@ -24,6 +24,7 @@ public class WorkLog
         {
             AddRecord(input);
         }
+        PersistState();
     }
 
     public void AddRecord(WorkLogRecord record)
@@ -137,4 +138,49 @@ public class WorkLog
         }
     }
 
+    // Persist state in json file using System.Text.Json
+    private async void PersistState()
+    {
+        var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+
+        // asynchronously write json to state.json file
+        using var file = File.CreateText("state.json");
+        await file.WriteAsync(json);
+    }
+
+    public void Boot()
+    {
+        LoadState();
+    }
+
+    // Read state from file
+    private void LoadState()
+    {
+        try
+        {
+            var json = File.ReadAllText("state.json");
+            var obj = JsonConvert.DeserializeObject<WorkLog>(json);
+
+            if (obj is not null)
+            {
+                Records = obj.Records;
+                Shortcuts = obj.Shortcuts;
+            }
+        }
+        catch (FileNotFoundException)
+        {
+            return;
+        }
+    }
+
+    public void CleanUp()
+    {
+        DeleteState();
+    }
+
+    // Delete persisted state
+    private void DeleteState()
+    {
+        File.Delete("state.json");
+    }
 }
