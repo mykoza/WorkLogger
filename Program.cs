@@ -14,15 +14,17 @@ while (true)
 
     if (string.IsNullOrEmpty(input))
     {
-        Console.Write("Are you sure? (y/n): ");
+        ConsoleExt.WriteColor("Are you sure? (y/n): ", ConsoleColor.Yellow);
 
         var confirmation = Console.ReadLine();
 
         if (string.IsNullOrEmpty(confirmation) || confirmation == "y")
         {
+            log.CloseLastTask();
+            Console.WriteLine("");
             Console.WriteLine("Aggregated times:");
             Console.WriteLine(log.AggregatedTimes());
-            Console.Write("Waiting for any key to exit.");
+            Console.Write("Waiting for any key to exit...");
             Console.ReadLine();
             log.CleanUp();
             break;
