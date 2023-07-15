@@ -15,6 +15,13 @@ public class WorkLogRecord
     {
         Name = name;
     }
+    
+    public WorkLogRecord(string name, DateTime start, DateTime end)
+    {
+        Name = name;
+        Start = start;
+        End = end;
+    }
 
     public WorkLogRecord(string name, string start, string? end, string time)
     {
@@ -29,11 +36,10 @@ public class WorkLogRecord
         Time = TimeSpan.Parse(time);
     }
 
-    public WorkLogRecord(string name, DateTime start, DateTime end)
+    public void AddTime(TimeSpan time)
     {
-        Name = name;
-        Start = start;
-        End = end;
+        Time += time;
+        End = null;
     }
 
     public void Finish()
@@ -42,14 +48,20 @@ public class WorkLogRecord
         Time = (TimeSpan)(End - Start);
     }
 
-    public void AddTime(TimeSpan time)
-    {
-        Time += time;
-        End = null;
-    }
-
     public WorkLogRecord Clone()
     {
         return new WorkLogRecord(Name);
+    }
+
+    public string FormatAsDuration()
+    {
+        if (Time.Hours == 0)
+        {
+            return $"{Time.Minutes}m";
+        }
+        else
+        {
+            return $"{Time.Hours}h {Time.Minutes}m";
+        }
     }
 }

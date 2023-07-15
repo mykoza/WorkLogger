@@ -7,11 +7,13 @@ public class WorkLog
     public List<WorkLogRecord> Records { get; set; } = new();
     // public List<WorkLogRecord> AggredatedRecords { get; private set; } = new();
     public TimeSpan TotalTime => Records.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
-    public TimeSpan FullTime { get; } = new TimeSpan(7, 30, 0);
-    public HashSet<string> Shortcuts { get; set; } = new() { "HD", "Meetings", "Przerwa" };
+    public TimeSpan FullTime { get; init; }
+    public HashSet<string> Shortcuts { get; set; }
 
-    public WorkLog()
+    public WorkLog(Settings settings)
     {
+        FullTime = new TimeSpan(0, settings.WorkdayInMinutes, 0);
+        Shortcuts = settings.Shortcuts.ToHashSet();
     }
 
     public void LogWork(string input)
@@ -90,6 +92,14 @@ public class WorkLog
         return $"Shortcuts: {records}";
     }
 
+    public void CloseLastTask()
+    {
+        if (Records.Count > 0)
+        {
+            Records.Last().Finish();
+        }
+    }
+
     private string RecordTimes()
     {
         return string.Join(
@@ -126,8 +136,6 @@ public class WorkLog
 
     private static string FormatTimeSpan(TimeSpan timeSpan)
     {
-        var res = string.Empty;
-
         if (timeSpan.Hours == 0)
         {
             return $"{timeSpan.Minutes}m";
