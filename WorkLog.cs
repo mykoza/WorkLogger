@@ -6,25 +6,24 @@ public class WorkLog
 {
     public List<WorkLogRecord> Records { get; set; } = new();
     public TimeSpan TotalTime => Records.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
-    public TimeSpan FullTime { get; init; }
-    public HashSet<string> Shortcuts { get; set; }
+    public TimeSpan FullTime { get; init; } = TimeSpan.Zero;
+    public HashSet<string> Shortcuts { get; set; } = new();
+    private string StateDirectory { get; init; } = "state";
+    private string StateFileName { get; init; } = DateTime.Today.ToString("yyyy-MM-dd") + ".json";
+    private string StatePath { get; init; } = String.Empty;
+    private int StateFilesToKeep { get; init; } = 1;
 
     public WorkLog()
     {
-        FullTime = TimeSpan.Zero;
-        Shortcuts = new HashSet<string>();
+        StatePath = Path.Combine(StateDirectory, StateFileName);
     }
 
     public WorkLog(Settings settings)
     {
         FullTime = new TimeSpan(0, settings.WorkdayInMinutes, 0);
         Shortcuts = settings.Shortcuts.ToHashSet();
-    }
-
-    public WorkLog(int workdayInMinutes, string[] shortcuts)
-    {
-        FullTime = new TimeSpan(0, workdayInMinutes, 0);
-        Shortcuts = new HashSet<string>(shortcuts);
+        StatePath = Path.Combine(StateDirectory, StateFileName);
+        StateFilesToKeep = settings.StateFilesToKeep;
     }
 
     public void LogWork(string input)
@@ -37,6 +36,7 @@ public class WorkLog
         {
             AddRecord(input);
         }
+
         PersistState();
     }
 
@@ -109,6 +109,7 @@ public class WorkLog
         {
             Records.Last().Finish();
         }
+        PersistState();
     }
 
     private string RecordTimes()
@@ -163,7 +164,8 @@ public class WorkLog
         var json = JsonConvert.SerializeObject(this, Formatting.Indented);
 
         // asynchronously write json to state.json file
-        using var file = File.CreateText("state.json");
+        Directory.CreateDirectory("state");
+        using var file = File.CreateText(StatePath);
         await file.WriteAsync(json);
     }
 
@@ -177,7 +179,7 @@ public class WorkLog
     {
         try
         {
-            var json = File.ReadAllText("state.json");
+            var json = File.ReadAllText(StatePath);
             var obj = JsonConvert.DeserializeObject<WorkLog>(json);
 
             if (obj is not null)
@@ -190,16 +192,31 @@ public class WorkLog
         {
             return;
         }
+        catch (DirectoryNotFoundException)
+        {
+            return;
+        }
     }
 
     public void CleanUp()
     {
-        DeleteState();
+        DeleteOldStates();
     }
 
-    // Delete persisted state
-    private void DeleteState()
+    private void DeleteOldStates()
     {
-        File.Delete("state.json");
+        var stateDir = new DirectoryInfo(StateDirectory);
+        var files = stateDir.GetFiles();
+        Array.Sort(files, (x, y) => y.CreationTime.CompareTo(x.CreationTime));
+
+        if (files.Length <= StateFilesToKeep)
+        {
+            return;
+        }
+
+        foreach (var item in files[StateFilesToKeep..])
+        {
+            item.Delete();
+        }
     }
 }

@@ -7,7 +7,7 @@ var config = new ConfigurationBuilder()
 
 var settings = config.GetSection("Settings").Get<Settings>() ?? new Settings();
 
-var log = new WorkLog(settings.WorkdayInMinutes, settings.Shortcuts);
+var log = new WorkLog(settings);
 log.Boot();
 
 while (true)
@@ -28,6 +28,9 @@ while (true)
         if (string.IsNullOrEmpty(confirmation) || confirmation == "y")
         {
             log.CloseLastTask();
+            Console.Clear();
+            Console.WriteLine(log.Info());
+            Console.WriteLine(log.NameShortCuts());
             Console.WriteLine("");
             Console.WriteLine("Aggregated times:");
             Console.WriteLine(log.AggregatedTimes());

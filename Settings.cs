@@ -7,4 +7,5 @@ public class Settings
         "Meeting",
         "Przerwa"
     };
+    public int StateFilesToKeep { get; set; } = 5;
 }
