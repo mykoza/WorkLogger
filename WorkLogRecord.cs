@@ -1,7 +1,7 @@
 namespace Namespace;
 public class WorkLogRecord
 {
-    public string Name { get; set;} = string.Empty;
+    public string Name { get; set; } = string.Empty;
     public DateTime Start { get; set; } = DateTime.Now;
     public DateTime? End { get; set; }
     public TimeSpan Time { get; set; }
@@ -15,7 +15,7 @@ public class WorkLogRecord
     {
         Name = name;
     }
-    
+
     public WorkLogRecord(string name, DateTime start, DateTime end)
     {
         Name = name;

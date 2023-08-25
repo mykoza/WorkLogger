@@ -5,7 +5,6 @@ namespace Namespace;
 public class WorkLog
 {
     public List<WorkLogRecord> Records { get; set; } = new();
-    // public List<WorkLogRecord> AggredatedRecords { get; private set; } = new();
     public TimeSpan TotalTime => Records.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
     public TimeSpan FullTime { get; init; }
     public HashSet<string> Shortcuts { get; set; }
@@ -29,7 +28,7 @@ public class WorkLog
         PersistState();
     }
 
-    public void AddRecord(WorkLogRecord record)
+    private void AddRecord(WorkLogRecord record)
     {
         if (Records.Count > 0)
         {
@@ -39,7 +38,7 @@ public class WorkLog
         Shortcuts.Add(record.Name);
     }
 
-    public void AddRecord(string name)
+    private void AddRecord(string name)
     {
         if (string.IsNullOrEmpty(name))
         {
@@ -49,7 +48,7 @@ public class WorkLog
         AddRecord(new WorkLogRecord(name));
     }
 
-    public void AddRecord(int index)
+    private void AddRecord(int index)
     {
         if (index >= Shortcuts.Count)
         {
@@ -127,7 +126,7 @@ public class WorkLog
                     x => x.Time,
                     (name, times) => new {
                         Name = name,
-                        Time = times.Aggregate((agg, time) => agg + time)
+                        Time = times.Aggregate((agg, time) => agg + time),
                     }
                 )
                 .Select(record => $"{record.Name}: {FormatTimeSpan(record.Time)}")
