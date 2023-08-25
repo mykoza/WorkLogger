@@ -7,7 +7,7 @@ var config = new ConfigurationBuilder()
 
 var settings = config.GetSection("Settings").Get<Settings>() ?? new Settings();
 
-var log = new WorkLog(settings);
+var log = new WorkLog(settings.WorkdayInMinutes, settings.Shortcuts);
 log.Boot();
 
 while (true)

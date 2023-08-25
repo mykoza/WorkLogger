@@ -9,10 +9,22 @@ public class WorkLog
     public TimeSpan FullTime { get; init; }
     public HashSet<string> Shortcuts { get; set; }
 
+    public WorkLog()
+    {
+        FullTime = TimeSpan.Zero;
+        Shortcuts = new HashSet<string>();
+    }
+
     public WorkLog(Settings settings)
     {
         FullTime = new TimeSpan(0, settings.WorkdayInMinutes, 0);
         Shortcuts = settings.Shortcuts.ToHashSet();
+    }
+
+    public WorkLog(int workdayInMinutes, string[] shortcuts)
+    {
+        FullTime = new TimeSpan(0, workdayInMinutes, 0);
+        Shortcuts = new HashSet<string>(shortcuts);
     }
 
     public void LogWork(string input)
