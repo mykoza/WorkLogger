@@ -7,8 +7,9 @@ var config = new ConfigurationBuilder()
 
 var settings = config.GetSection("Settings").Get<Settings>() ?? new Settings();
 
-var log = new WorkLog(settings);
+var workLog = new WorkLog(settings);
+var formatter = new WorkLogFormatter(workLog);
 
-var ui = new ConsoleUi(log);
+var ui = new ConsoleUi(workLog, formatter);
 
 ui.Run();

@@ -1,11 +1,13 @@
 namespace Namespace;
 public class ConsoleUi
 {
-    private WorkLog _workLog;
+    private readonly WorkLog _workLog;
+    private readonly WorkLogFormatter _workLogFormatter;
 
-    public ConsoleUi(WorkLog workLog)
+    public ConsoleUi(WorkLog workLog, WorkLogFormatter workLogFormatter)
     {
         _workLog = workLog;
+        _workLogFormatter = workLogFormatter;
     }
 
     public void Run()
@@ -37,12 +39,12 @@ public class ConsoleUi
 
     private void WriteInfo()
     {
-        Console.WriteLine(_workLog.Info());
+        Console.WriteLine(_workLogFormatter.Info());
     }
 
     private void WriteNameShortCuts()
     {
-        Console.WriteLine(_workLog.NameShortCuts());
+        Console.WriteLine(_workLogFormatter.NameShortCuts());
     }
 
     private string AskForNewTask()
@@ -96,7 +98,7 @@ public class ConsoleUi
     private void WriteAggregates()
     {
         Console.WriteLine("Aggregated times:");
-        Console.WriteLine(_workLog.AggregatedTimes());
+        Console.WriteLine(_workLogFormatter.AggregatedTimes());
     }
 
     private string? AskForExitConfirmation()

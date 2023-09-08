@@ -70,39 +70,6 @@ public class WorkLog
         AddRecord(new WorkLogRecord(Shortcuts.ElementAt(index)));
     }
 
-    public string Info()
-    {
-        var builder = new StringBuilder();
-
-        builder.AppendLine(TotalTimes());
-        builder.Append("Previous tasks: ");
-        builder.AppendLine(RecordTimes());
-
-        if (Records.Count > 0)
-        {
-            builder.Append("Current task: ");
-
-            var last = Records.Last();
-            builder.AppendLine($"{last.Name}, started at {last.Start.ToString("HH:mm")}");
-        }
-        else
-        {
-            builder.AppendLine("Work not started");
-        }
-
-        return builder.ToString();
-    }
-
-    public string NameShortCuts()
-    {
-        var records = string.Join(
-            ", ", 
-            Shortcuts.Select((d, i) => $"{d} [{i}]")
-        );
-
-        return $"Shortcuts: {records}";
-    }
-
     public void CloseLastTask()
     {
         if (Records.Count > 0)
@@ -110,52 +77,6 @@ public class WorkLog
             Records.Last().Finish();
         }
         PersistState();
-    }
-
-    private string RecordTimes()
-    {
-        return string.Join(
-            " | ", 
-            Records
-                .Where(record => record.Time > TimeSpan.Zero)
-                .Select(record => $"{record.Name}: {FormatTimeSpan(record.Time)}")
-        );
-    }
-
-    private string TotalTimes()
-    {
-        var total = TotalTime.ToString(@"h\:mm\:ss");
-        var remaining = (FullTime - TotalTime).ToString(@"h\:mm\:ss");
-        return $"Total time: {total} | Remaining time: {remaining}";
-    }
-
-    public string AggregatedTimes()
-    {
-        return string.Join(
-            " | ",
-            Records
-                .GroupBy(
-                    x => x.Name,
-                    x => x.Time,
-                    (name, times) => new {
-                        Name = name,
-                        Time = times.Aggregate((agg, time) => agg + time),
-                    }
-                )
-                .Select(record => $"{record.Name}: {FormatTimeSpan(record.Time)}")
-        );
-    }
-
-    private static string FormatTimeSpan(TimeSpan timeSpan)
-    {
-        if (timeSpan.Hours == 0)
-        {
-            return $"{timeSpan.Minutes}m";
-        }
-        else
-        {
-            return $"{timeSpan.Hours}h {timeSpan.Minutes}m";
-        }
     }
 
     // Persist state in json file using System.Text.Json
