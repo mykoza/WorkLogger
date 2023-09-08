@@ -12,7 +12,6 @@ public class ConsoleUi
 
     public void Run()
     {
-        _workLog.Boot();
         Loop();
         Shutdown();
         WriteWaitForExit();
@@ -78,8 +77,6 @@ public class ConsoleUi
         WriteInfo();
         Console.WriteLine("");
         WriteAggregates();
-
-        _workLog.CleanUp();
     }
 
     private void HandleNewTaskRequest(string input)

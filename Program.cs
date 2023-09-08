@@ -8,6 +8,11 @@ var config = new ConfigurationBuilder()
 var settings = config.GetSection("Settings").Get<Settings>() ?? new Settings();
 
 var workLog = new WorkLog(settings);
+
+var persistanceManager = new PersistanceManager(settings);
+persistanceManager.LoadState(ref workLog);
+persistanceManager.Subscribe(workLog);
+
 var formatter = new WorkLogFormatter(workLog);
 
 var ui = new ConsoleUi(workLog, formatter);

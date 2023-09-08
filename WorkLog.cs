@@ -1,29 +1,20 @@
-using System.Text;
-using Newtonsoft.Json;
-
 namespace Namespace;
-public class WorkLog
+public class WorkLog : IObservable<WorkLog>
 {
     public List<WorkLogRecord> Records { get; set; } = new();
     public TimeSpan TotalTime => Records.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
     public TimeSpan FullTime { get; init; } = TimeSpan.Zero;
     public HashSet<string> Shortcuts { get; set; } = new();
-    private string StateDirectory { get; init; } = "state";
-    private string StateFileName { get; init; } = DateTime.Today.ToString("yyyy-MM-dd") + ".json";
-    private string StatePath { get; init; } = String.Empty;
-    private int StateFilesToKeep { get; init; } = 1;
+    private HashSet<IObserver<WorkLog>> _observers = new();
 
     public WorkLog()
     {
-        StatePath = Path.Combine(StateDirectory, StateFileName);
     }
 
     public WorkLog(Settings settings)
     {
         FullTime = new TimeSpan(0, settings.WorkdayInMinutes, 0);
         Shortcuts = settings.Shortcuts.ToHashSet();
-        StatePath = Path.Combine(StateDirectory, StateFileName);
-        StateFilesToKeep = settings.StateFilesToKeep;
     }
 
     public void LogWork(string input)
@@ -37,7 +28,7 @@ public class WorkLog
             AddRecord(input);
         }
 
-        PersistState();
+        StateChanged();
     }
 
     private void AddRecord(WorkLogRecord record)
@@ -76,68 +67,24 @@ public class WorkLog
         {
             Records.Last().Finish();
         }
-        PersistState();
+        StateChanged();
     }
 
-    // Persist state in json file using System.Text.Json
-    private async void PersistState()
+    public IDisposable Subscribe(IObserver<WorkLog> observer)
     {
-        var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-
-        // asynchronously write json to state.json file
-        Directory.CreateDirectory("state");
-        using var file = File.CreateText(StatePath);
-        await file.WriteAsync(json);
-    }
-
-    public void Boot()
-    {
-        LoadState();
-    }
-
-    // Read state from file
-    private void LoadState()
-    {
-        try
+        if (_observers.Add(observer))
         {
-            var json = File.ReadAllText(StatePath);
-            var obj = JsonConvert.DeserializeObject<WorkLog>(json);
-
-            if (obj is not null)
-            {
-                Records = obj.Records;
-                Shortcuts = obj.Shortcuts;
-            }
-        }
-        catch (FileNotFoundException)
-        {
-            return;
-        }
-        catch (DirectoryNotFoundException)
-        {
-            return;
-        }
-    }
-
-    public void CleanUp()
-    {
-        DeleteOldStates();
-    }
-
-    private void DeleteOldStates()
-    {
-        var stateDir = new DirectoryInfo(StateDirectory);
-        var files = stateDir.GetFiles();
-        Array.Sort(files, (x, y) => y.CreationTime.CompareTo(x.CreationTime));
-
-        if (files.Length <= StateFilesToKeep)
-        {
-            return;
+            observer.OnNext(this);
         }
 
-        foreach (var item in files[StateFilesToKeep..])
+        return new Unsubscriber<WorkLog>(_observers, observer);
+    }
+
+    public void StateChanged()
+    {
+        foreach (var observer in _observers)
         {
-            item.Delete();
+            observer.OnNext(this);
         }
     }
 }
