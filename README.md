@@ -6,7 +6,7 @@ Releases are not self-contained.
 
 ## Configuration
 
-There are two settings available in `appsettings.json`:
+There are three settings available in `appsettings.json`:
 
 1. `WorkdayInMinutes`: integer representing the length of workday in minutes
 2. `Shortcuts`: string[] which contains default task shortcuts, available before any new tasks are logged
@@ -14,7 +14,7 @@ There are two settings available in `appsettings.json`:
 
 Above settings should be inside `Settings` section of the `json` file.
 
-Default settings are:
+Default settings:
 ```json
 {
     "Settings": {
