@@ -1,8 +1,8 @@
 namespace Namespace;
 public class WorkLog : IObservable<WorkLog>
 {
-    public List<WorkLogRecord> Records { get; set; } = new();
-    public TimeSpan TotalTime => Records.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
+    public List<WorkLogTask> Tasks { get; set; } = new();
+    public TimeSpan TotalTime => Tasks.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
     public TimeSpan FullTime { get; init; } = TimeSpan.Zero;
     public HashSet<string> Shortcuts { get; set; } = new();
     private HashSet<IObserver<WorkLog>> _observers = new();
@@ -31,13 +31,13 @@ public class WorkLog : IObservable<WorkLog>
         StateChanged();
     }
 
-    private void AddRecord(WorkLogRecord record)
+    private void AddRecord(WorkLogTask record)
     {
-        if (Records.Count > 0)
+        if (Tasks.Count > 0)
         {
-            Records.Last().Finish();
+            Tasks.Last().Finish();
         }
-        Records.Add(record);
+        Tasks.Add(record);
         Shortcuts.Add(record.Name);
     }
 
@@ -48,7 +48,7 @@ public class WorkLog : IObservable<WorkLog>
             throw new ArgumentException($"{nameof(name)} cannot be empty.");
         }
 
-        AddRecord(new WorkLogRecord(name));
+        AddRecord(new WorkLogTask(name));
     }
 
     private void AddRecord(int index)
@@ -58,15 +58,46 @@ public class WorkLog : IObservable<WorkLog>
             throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        AddRecord(new WorkLogRecord(Shortcuts.ElementAt(index)));
+        AddRecord(new WorkLogTask(Shortcuts.ElementAt(index)));
     }
 
     public void CloseLastTask()
     {
-        if (Records.Count > 0)
+        if (Tasks.Count > 0)
         {
-            Records.Last().Finish();
+            Tasks.Last().Finish();
         }
+        StateChanged();
+    }
+
+    public void ModifyTask(
+        int taskIndex,
+        TaskTimesModificationRequest taskTimesModificationRequest
+    ) {
+        if (taskIndex >= Tasks.Count || taskIndex < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(taskIndex));
+        }
+
+        var record = Tasks[taskIndex];
+        record.ModifyTimes(taskTimesModificationRequest);
+
+        if (taskIndex > 0 && taskTimesModificationRequest.ChangesStart)
+        {
+            var previousRecord = Tasks[taskIndex - 1];
+            previousRecord.ModifyEnd(record.Start.AddSeconds(-1));
+        }
+        
+        if (taskIndex < Tasks.Count - 1 && taskTimesModificationRequest.ChangesEnd)
+        {
+            var nextRecord = Tasks[taskIndex + 1];
+
+            if (record.End is not null)
+            {
+                nextRecord.ModifyStart(record.End.Value.AddSeconds(1));
+            }
+        }
+
         StateChanged();
     }
 

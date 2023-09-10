@@ -17,4 +17,10 @@ var formatter = new WorkLogFormatter(workLog);
 
 var ui = new ConsoleUi(workLog, formatter);
 
+// workLog.LogWork("test1");
+// workLog.LogWork("test2");
+// workLog.LogWork("test3");
+
+// workLog.ModifyTask(taskIndex: 1, changeDurationRequest: new ChangeDurationRequest(TimeSpan.FromMinutes(30), TimeCalculationTarget.Start));
+
 ui.Run();

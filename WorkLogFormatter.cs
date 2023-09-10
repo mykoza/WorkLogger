@@ -18,11 +18,11 @@ public class WorkLogFormatter
         builder.Append("Previous tasks: ");
         builder.AppendLine(RecordTimes());
 
-        if (_workLog.Records.Count > 0)
+        if (_workLog.Tasks.Count > 0)
         {
             builder.Append("Current task: ");
 
-            var last = _workLog.Records.Last();
+            var last = _workLog.Tasks.Last();
             builder.AppendLine($"{last.Name}, started at {last.Start.ToString("HH:mm")}");
         }
         else
@@ -54,7 +54,7 @@ public class WorkLogFormatter
     {
         return string.Join(
             " | ", 
-            _workLog.Records
+            _workLog.Tasks
                 .Where(record => record.Time > TimeSpan.Zero)
                 .Select(record => $"{record.Name}: {FormatTimeSpan(record.Time)}")
         );
@@ -64,7 +64,7 @@ public class WorkLogFormatter
     {
         return string.Join(
             " | ",
-            _workLog.Records
+            _workLog.Tasks
                 .GroupBy(
                     x => x.Name,
                     x => x.Time,

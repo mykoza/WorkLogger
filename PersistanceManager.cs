@@ -35,7 +35,7 @@ public class PersistanceManager : IObserver<WorkLog>
 
             if (obj is not null)
             {
-                workLog.Records = obj.Records;
+                workLog.Tasks = obj.Tasks;
                 workLog.Shortcuts = obj.Shortcuts;
             }
         }
