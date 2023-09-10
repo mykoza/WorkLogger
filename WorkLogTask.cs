@@ -2,9 +2,9 @@ namespace Namespace;
 public class WorkLogTask
 {
     public string Name { get; set; } = string.Empty;
-    public DateTime Start { get; private set; } = DateTime.Now;
-    public DateTime? End { get; private set; }
-    public TimeSpan Time { get; private set; }
+    public DateTime Start { get; set; } = DateTime.Now;
+    public DateTime? End { get; set; }
+    public TimeSpan Time { get; set; }
     public string Comment { get; set; } = string.Empty;
 
     public WorkLogTask()

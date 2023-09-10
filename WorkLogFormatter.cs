@@ -16,7 +16,7 @@ public class WorkLogFormatter
 
         builder.AppendLine(TotalTimes());
         builder.Append("Previous tasks: ");
-        builder.AppendLine(RecordTimes());
+        builder.AppendLine(PreviousTasksTimes());
 
         if (_workLog.Tasks.Count > 0)
         {
@@ -29,6 +29,16 @@ public class WorkLogFormatter
         {
             builder.AppendLine("Work not started");
         }
+
+        return builder.ToString();
+    }
+
+    public string ListOfTasks()
+    {
+        var builder = new StringBuilder();
+        builder.AppendJoin(
+            Environment.NewLine,
+            _workLog.Tasks.Select((t, i) => $"[{i}] {t.Name}"));
 
         return builder.ToString();
     }
@@ -50,7 +60,7 @@ public class WorkLogFormatter
         return $"Shortcuts: {records}";
     }
     
-    private string RecordTimes()
+    private string PreviousTasksTimes()
     {
         return string.Join(
             " | ", 
