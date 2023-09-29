@@ -5,14 +5,27 @@ public class PersistanceManager : IObserver<WorkLog>
 {
     private WorkLog? _workLog;
     private IDisposable? _cancellation;
-    private readonly string _stateDirectory = "state";
+    private readonly string _stateDirectoryName = "state";
     private readonly string _stateFileName = DateTime.Today.ToString("yyyy-MM-dd") + ".json";
+    private readonly string _appDataPath;
+    private readonly string _stateDirectoryPath = string.Empty;
     private readonly string _statePath = string.Empty;
     private readonly int _stateFilesToKeep = 1;
 
     public PersistanceManager(Settings settings)
     {
-        _statePath = Path.Combine(_stateDirectory, _stateFileName);
+        _appDataPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "WorkLogger");
+            
+        _stateDirectoryPath = Path.Combine(
+            _appDataPath,
+            _stateDirectoryName);
+
+        _statePath = Path.Combine(
+            _stateDirectoryPath,
+            _stateFileName);
+
         _stateFilesToKeep = settings.StateFilesToKeep;
     }
 
@@ -20,7 +33,7 @@ public class PersistanceManager : IObserver<WorkLog>
     {
         var json = JsonConvert.SerializeObject(_workLog, Formatting.Indented);
 
-        Directory.CreateDirectory("state");
+        Directory.CreateDirectory(_stateDirectoryPath);
 
         using var file = File.CreateText(_statePath);
         await file.WriteAsync(json);
@@ -51,7 +64,7 @@ public class PersistanceManager : IObserver<WorkLog>
 
     public void DeleteOldStates()
     {
-        var stateDir = new DirectoryInfo(_stateDirectory);
+        var stateDir = new DirectoryInfo(_stateDirectoryPath);
         var files = stateDir.GetFiles();
         Array.Sort(files, (x, y) => y.CreationTime.CompareTo(x.CreationTime));
 
@@ -80,6 +93,7 @@ public class PersistanceManager : IObserver<WorkLog>
     public void OnCompleted()
     {
         _workLog = null;
+        Unsubscribe();
         DeleteOldStates();
     }
 
@@ -94,5 +108,4 @@ public class PersistanceManager : IObserver<WorkLog>
 
         PersistState();
     }
-
 }

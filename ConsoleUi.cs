@@ -72,6 +72,7 @@ public class ConsoleUi
     private void Shutdown()
     {
         _workLog.CloseLastTask();
+        _workLog.Finish();
 
         Console.Clear();
         WriteInfo();
