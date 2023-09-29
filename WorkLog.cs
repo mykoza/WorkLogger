@@ -118,4 +118,12 @@ public class WorkLog : IObservable<WorkLog>
             observer.OnNext(this);
         }
     }
+
+    public void Finish()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.OnCompleted();
+        }
+    }
 }
