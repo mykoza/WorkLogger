@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Namespace;
+using WorkLogger;
 
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")

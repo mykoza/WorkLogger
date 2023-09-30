@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 public static class ConsoleExt
 {
     public static void WriteColor(string text, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)

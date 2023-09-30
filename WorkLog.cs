@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 public class WorkLog : IObservable<WorkLog>
 {
     public List<WorkLogTask> Tasks { get; set; } = new();

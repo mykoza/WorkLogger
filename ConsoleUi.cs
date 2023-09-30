@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 public class ConsoleUi
 {
     private readonly WorkLog _workLog;

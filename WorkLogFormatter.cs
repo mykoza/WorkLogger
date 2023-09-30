@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Namespace;
+namespace WorkLogger;
 public class WorkLogFormatter
 {
     private readonly WorkLog _workLog;
