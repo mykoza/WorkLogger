@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 public class Settings
 {
     public int WorkdayInMinutes { get; set; } = 480;

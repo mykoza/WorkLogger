@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 public class WorkLogRecord
 {
     public string Name { get; set; } = string.Empty;
