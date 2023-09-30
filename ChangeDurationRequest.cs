@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 
 public class ChangeDurationRequest
 {
