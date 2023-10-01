@@ -2,6 +2,8 @@
 using WorkLogger;
 using WorkLogger.Ui;
 
+AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
@@ -25,3 +27,13 @@ var ui = new ConsoleUi(workLog, formatter);
 // workLog.ModifyTask(taskIndex: 1, changeDurationRequest: new ChangeDurationRequest(TimeSpan.FromMinutes(30), TimeCalculationTarget.Start));
 
 ui.Run();
+
+static void ExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+{
+    Console.WriteLine("Exception occurred:");
+    var exception = (Exception)e.ExceptionObject;
+    Console.WriteLine(exception.Message);
+    Console.WriteLine(exception.InnerException?.Message);
+    Console.WriteLine("Press enter to exit");
+    Console.ReadLine();
+}
