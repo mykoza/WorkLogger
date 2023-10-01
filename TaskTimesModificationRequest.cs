@@ -1,4 +1,4 @@
-namespace Namespace;
+namespace WorkLogger;
 
 public class TaskTimesModificationRequest
 {
@@ -15,7 +15,7 @@ public class TaskTimesModificationRequest
 
     public TaskTimesModificationRequest(DateTime? start, DateTime? end, ChangeDurationRequest? changeDurationRequest)
     {
-        if (end < start)
+        if (end != default && end < start)
         {
             throw new ArgumentException("End cannot be before start.");
         }

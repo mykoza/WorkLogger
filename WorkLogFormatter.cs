@@ -33,12 +33,51 @@ public class WorkLogFormatter
         return builder.ToString();
     }
 
+    public string TaskDetails(int taskIndex)
+    {
+        var task = _workLog.Tasks[taskIndex];
+        var builder = new StringBuilder();
+        builder.AppendLine($"Name: {task.Name}");
+        builder.AppendLine($"Start: {task.Start.ToString("HH:mm:ss")}");
+
+        if (task.End is not null)
+        {
+            builder.AppendLine($"End: {task.End.Value.ToString("HH:mm:ss")}");
+            builder.AppendLine($"Duration: {FormatTimeSpan(task.Time)}");
+        }
+        else
+        {
+            builder.AppendLine($"End: None");
+        }
+
+        return builder.ToString();
+    }
+
+    public string ModificationString(WorkLogTask task)
+    {
+        var start = task.Start.ToString("yyyy-MM-dd HH:mm:ss");
+        var end = task.End?.ToString("yyyy-MM-dd HH:mm:ss");
+        var duration = $"{task.Time.Hours}h {task.Time.Minutes}m";
+
+        return $"s={start}, e={end}, d={duration}";
+    }
+
     public string ListOfTasks()
     {
         var builder = new StringBuilder();
         builder.AppendJoin(
             Environment.NewLine,
             _workLog.Tasks.Select((t, i) => $"[{i}] {t.Name}"));
+
+        return builder.ToString();
+    }
+
+    public string ListOfTasksWithDurations()
+    {
+        var builder = new StringBuilder();
+        builder.AppendJoin(
+            Environment.NewLine,
+            _workLog.Tasks.Select((t, i) => $"[{i}] {t.Name} {FormatTimeSpan(t.Time)}"));
 
         return builder.ToString();
     }
@@ -54,7 +93,7 @@ public class WorkLogFormatter
     {
         var records = string.Join(
             ", ", 
-            _workLog.Shortcuts.Select((d, i) => $"{d} [{i}]")
+            _workLog.Shortcuts.Select((d, i) => $"[{i}] {d}")
         );
 
         return $"Shortcuts: {records}";
@@ -87,7 +126,7 @@ public class WorkLogFormatter
         );
     }
 
-    private static string FormatTimeSpan(TimeSpan timeSpan)
+    public static string FormatTimeSpan(TimeSpan timeSpan)
     {
         if (timeSpan.Hours == 0)
         {
