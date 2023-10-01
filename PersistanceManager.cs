@@ -15,7 +15,7 @@ public class PersistanceManager : IObserver<WorkLog>
     public PersistanceManager(Settings settings)
     {
         _appDataPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            settings.AppDataPath,
             "WorkLogger");
             
         _stateDirectoryPath = Path.Combine(
