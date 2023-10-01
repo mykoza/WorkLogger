@@ -15,7 +15,7 @@ public class PersistanceManager : IObserver<WorkLog>
     public PersistanceManager(Settings settings)
     {
         _appDataPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            settings.AppDataPath,
             "WorkLogger");
             
         _stateDirectoryPath = Path.Combine(
@@ -48,7 +48,7 @@ public class PersistanceManager : IObserver<WorkLog>
 
             if (obj is not null)
             {
-                workLog.Records = obj.Records;
+                workLog.Tasks = obj.Tasks;
                 workLog.Shortcuts = obj.Shortcuts;
             }
         }

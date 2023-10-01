@@ -1,13 +1,19 @@
-namespace WorkLogger;
+namespace WorkLogger.Ui;
 public class ConsoleUi
 {
     private readonly WorkLog _workLog;
     private readonly WorkLogFormatter _workLogFormatter;
+    private readonly UiMode _inputMode;
+    private readonly UiMode _modificationMode;
+    private string _taskInputModeShortcut = "i";
+    private string _taskModificationModeShortcut = "m";
 
     public ConsoleUi(WorkLog workLog, WorkLogFormatter workLogFormatter)
     {
         _workLog = workLog;
         _workLogFormatter = workLogFormatter;
+        _inputMode = new TaskInputMode(workLog, workLogFormatter);
+        _modificationMode = new TaskModificationMode(workLog, workLogFormatter);
     }
 
     public void Run()
@@ -21,35 +27,33 @@ public class ConsoleUi
     {
         while (true)
         {
-            Console.Clear();
-            WriteInfo();
-            WriteNameShortCuts();
-
-            var input = AskForNewTask();
-
-            if (ExitRequested(input))
+            if (_workLog.Tasks.Count == 0)
             {
-                break;
+                _inputMode.Run();
+                continue;
             }
 
-            HandleNewTaskRequest(input);
+            Console.WriteLine("Which mode do you want to use? [i] insert, [m] modification, empty to quit");
+            var input = Console.ReadLine() ?? string.Empty;
+    
+            if (ExitRequested(input))
+            {
+                return;
+            }
+            else if (TaskInputModeRequested(input))
+            {
+                _inputMode.Run();
+            }
+            else if (TaskModificationModeRequested(input))
+            {
+                _modificationMode.Run();
+            }
         }
     }
 
     private void WriteInfo()
     {
         Console.WriteLine(_workLogFormatter.Info());
-    }
-
-    private void WriteNameShortCuts()
-    {
-        Console.WriteLine(_workLogFormatter.NameShortCuts());
-    }
-
-    private string AskForNewTask()
-    {
-        Console.Write("New task: ");
-        return Console.ReadLine() ?? string.Empty;
     }
 
     private bool ExitRequested(string input)
@@ -69,6 +73,16 @@ public class ConsoleUi
         return false;
     }
 
+    private bool TaskInputModeRequested(string input)
+    {
+        return input == _taskInputModeShortcut;
+    }
+
+    private bool TaskModificationModeRequested(string input)
+    {
+        return input == _taskModificationModeShortcut;
+    }
+
     private void Shutdown()
     {
         _workLog.CloseLastTask();
@@ -80,19 +94,6 @@ public class ConsoleUi
         WriteAggregates();
     }
 
-    private void HandleNewTaskRequest(string input)
-    {
-        try
-        {
-            _workLog.LogWork(input);
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            Console.Write("Index out of range. Press enter to try again.");
-            Console.ReadLine();
-        }
-    }
-
     private void WriteAggregates()
     {
         Console.WriteLine("Aggregated times:");
@@ -101,7 +102,7 @@ public class ConsoleUi
 
     private string? AskForExitConfirmation()
     {
-        ConsoleExt.WriteColor("Are you sure? (y/n): ", ConsoleColor.Yellow);
+        ConsoleExt.WriteColor("Are you sure you want to quit the application? (y/n): ", ConsoleColor.Yellow);
         return Console.ReadLine();
     }
 
