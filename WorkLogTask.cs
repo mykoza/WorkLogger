@@ -60,7 +60,10 @@ public class WorkLogTask
             return;
         }
 
-        CalculateTime();
+        if (End is not null)
+        {
+            CalculateTime();
+        }
     }
 
     public void ModifyStart(DateTime start)
