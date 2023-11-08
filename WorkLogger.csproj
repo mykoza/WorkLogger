@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Application\" />
-    <Folder Include="Domain\" />
     <Folder Include="Persistance\" />
     <Folder Include="Ui\ConsoleUi\" />
   </ItemGroup>
