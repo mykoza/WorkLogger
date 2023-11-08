@@ -1,6 +1,7 @@
-﻿using WorkLogger.Ui;
+﻿using WorkLogger.Application;
+using WorkLogger.Domain;
 
-namespace WorkLogger;
+namespace WorkLogger.Ui.ConsoleUi;
 
 public class TaskModificationMode : UiMode
 {

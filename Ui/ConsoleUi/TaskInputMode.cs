@@ -1,4 +1,6 @@
-﻿namespace WorkLogger.Ui;
+﻿using WorkLogger.Domain;
+
+namespace WorkLogger.Ui.ConsoleUi;
 
 public class TaskInputMode : UiMode
 {

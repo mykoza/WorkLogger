@@ -1,4 +1,7 @@
-namespace WorkLogger;
+using WorkLogger.Application;
+
+namespace WorkLogger.Domain;
+
 public class WorkLogTask
 {
     public string Name { get; set; } = string.Empty;

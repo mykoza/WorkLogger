@@ -1,4 +1,4 @@
-namespace WorkLogger;
+namespace WorkLogger.Application;
 public class Settings
 {
     private string _appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);

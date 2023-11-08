@@ -1,6 +1,9 @@
 using Newtonsoft.Json;
+using WorkLogger.Application;
+using WorkLogger.Domain;
 
-namespace WorkLogger;
+namespace WorkLogger.Persistance;
+
 public class PersistanceManager : IObserver<WorkLog>
 {
     private WorkLog? _workLog;

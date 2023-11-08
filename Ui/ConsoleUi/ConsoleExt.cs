@@ -1,4 +1,5 @@
-namespace WorkLogger;
+namespace WorkLogger.Ui.ConsoleUi;
+
 public static class ConsoleExt
 {
     public static void WriteColor(string text, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)

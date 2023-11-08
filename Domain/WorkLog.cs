@@ -1,4 +1,8 @@
-namespace WorkLogger;
+using WorkLogger.Application;
+using WorkLogger.Common;
+
+namespace WorkLogger.Domain;
+
 public class WorkLog : IObservable<WorkLog>
 {
     public List<WorkLogTask> Tasks { get; set; } = new();
