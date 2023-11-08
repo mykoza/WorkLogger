@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using WorkLogger;
-using WorkLogger.Ui;
+using WorkLogger.Application;
+using WorkLogger.Domain;
+using WorkLogger.Persistance;
+using WorkLogger.Ui.ConsoleUi;
 
 AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
 

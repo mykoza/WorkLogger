@@ -1,4 +1,5 @@
-namespace WorkLogger;
+namespace WorkLogger.Common;
+
 internal sealed class Unsubscriber<WorkLog> : IDisposable
 {
     private readonly ISet<IObserver<WorkLog>> _observers;

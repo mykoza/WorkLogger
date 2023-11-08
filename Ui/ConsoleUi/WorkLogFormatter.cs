@@ -1,6 +1,8 @@
 using System.Text;
+using WorkLogger.Domain;
 
-namespace WorkLogger;
+namespace WorkLogger.Ui.ConsoleUi;
+
 public class WorkLogFormatter
 {
     private readonly WorkLog _workLog;

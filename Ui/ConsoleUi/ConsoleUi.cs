@@ -1,4 +1,7 @@
-namespace WorkLogger.Ui;
+using WorkLogger.Domain;
+
+namespace WorkLogger.Ui.ConsoleUi;
+
 public class ConsoleUi
 {
     private readonly WorkLog _workLog;

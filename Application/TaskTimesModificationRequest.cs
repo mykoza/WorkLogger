@@ -1,4 +1,4 @@
-namespace WorkLogger;
+namespace WorkLogger.Application;
 
 public class TaskTimesModificationRequest
 {
