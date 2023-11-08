@@ -15,9 +15,9 @@ public class WorkLog : IObservable<WorkLog>
     {
     }
 
-    public WorkLog(Settings settings)
+    public WorkLog(WorkDayLength workDayLength, Settings settings)
     {
-        FullTime = new TimeSpan(0, settings.WorkdayInMinutes, 0);
+        FullTime = workDayLength.Length;
         Shortcuts = settings.Shortcuts.ToHashSet();
     }
 
