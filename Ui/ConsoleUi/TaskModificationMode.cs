@@ -49,7 +49,7 @@ public class TaskModificationMode : UiMode
         }
 
         var task = _workLog.Tasks[taskIndex];
-        Console.WriteLine(_workLogFormatter.TaskDetails(taskIndex));
+        Console.WriteLine(_workLogFormatter.TaskDetails(task));
 
         DateTime? start = default;
         DateTime? end = default;
@@ -127,8 +127,6 @@ public class TaskModificationMode : UiMode
             changeDurationRequest = new(duration, target);
         }
 
-        // if (start is not null || end is not null || changeDurationRequest is not null)
-        // {
         var modificationRequest = new TaskTimesModificationRequest(
             start,
             end,
@@ -136,7 +134,6 @@ public class TaskModificationMode : UiMode
         );
 
         _workLog.ModifyTask(taskIndex, modificationRequest);
-        // }
     }
 
     private string AskForTaskIndex()
