@@ -12,7 +12,7 @@ var config = new ConfigurationBuilder()
 
 var settings = config.GetSection("Settings").Get<Settings>() ?? new Settings();
 
-var workDayLength = new WorkDayLength(settings.WorkdayInMinutes);
+var workDayLength = new WorkDay(settings.WorkdayInMinutes);
 var workLog = new WorkLog(workDayLength, settings);
 
 var persistanceManager = new PersistanceManager(settings);

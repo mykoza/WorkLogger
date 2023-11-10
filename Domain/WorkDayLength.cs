@@ -1,15 +1,15 @@
 ﻿namespace WorkLogger.Domain;
 
-public class WorkDayLength
+public class WorkDay
 {
-    public WorkDayLength(TimeSpan length)
+    public WorkDay(TimeSpan length)
     {
         ValidateLengthTimeSpan(length);
 
         Length = length;
     }
 
-    public WorkDayLength(int lengthInMinutes)
+    public WorkDay(int lengthInMinutes)
     {
         ValidateLengthTimeSpan(TimeSpan.FromMinutes(lengthInMinutes));
 
@@ -24,5 +24,5 @@ public class WorkDayLength
         }
     }
 
-    public TimeSpan Length { get; init; }   
+    public TimeSpan Length { get; init; }
 }
