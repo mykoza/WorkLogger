@@ -15,9 +15,9 @@ public class WorkLog : IObservable<WorkLog>
     {
     }
 
-    public WorkLog(WorkDayLength workDayLength, Settings settings)
+    public WorkLog(WorkDay workDay, Settings settings)
     {
-        FullTime = workDayLength.Length;
+        FullTime = workDay.Length;
         Shortcuts = settings.Shortcuts.ToHashSet();
     }
 
@@ -25,17 +25,17 @@ public class WorkLog : IObservable<WorkLog>
     {
         if (int.TryParse(input, out var index))
         {
-            AddRecord(index);
+            AddTask(index);
         }
         else
         {
-            AddRecord(input);
+            AddTask(input);
         }
 
         StateChanged();
     }
 
-    private void AddRecord(WorkLogTask record)
+    private void AddTask(WorkLogTask record)
     {
         if (Tasks.Count > 0)
         {
@@ -45,24 +45,24 @@ public class WorkLog : IObservable<WorkLog>
         Shortcuts.Add(record.Name);
     }
 
-    private void AddRecord(string name)
+    private void AddTask(string name)
     {
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentException($"{nameof(name)} cannot be empty.");
         }
 
-        AddRecord(new WorkLogTask(name));
+        AddTask(new WorkLogTask(name));
     }
 
-    private void AddRecord(int index)
+    private void AddTask(int index)
     {
         if (index >= Shortcuts.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(index));
         }
 
-        AddRecord(new WorkLogTask(Shortcuts.ElementAt(index)));
+        AddTask(new WorkLogTask(Shortcuts.ElementAt(index)));
     }
 
     public void CloseLastTask()
