@@ -34,6 +34,23 @@ public class WorkLog : IObservable<WorkLog>
 
         StateChanged();
     }
+    
+    public void LogWork(WorkLogTask task)
+    {
+        if (!task.IsNew())
+        {
+            throw new ArgumentException("Task is not new.");
+        }
+
+        if (task.Start < Tasks.Max(x => x.End))
+        {
+            throw new ArgumentException("Task start time is before previous task end time.");
+        }
+
+        AddTask(task);
+
+        StateChanged();
+    }
 
     private void AddTask(WorkLogTask record)
     {
