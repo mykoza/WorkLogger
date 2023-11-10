@@ -146,4 +146,9 @@ public class WorkLogTask
             return $"{Time.Hours}h {Time.Minutes}m";
         }
     }
+
+    public bool IsNew()
+    {
+        return End is null && Time == TimeSpan.Zero;
+    }
 }
