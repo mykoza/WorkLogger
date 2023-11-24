@@ -88,6 +88,7 @@ public class WorkLog : IObservable<WorkLog>
         {
             Tasks.Last().Finish();
         }
+
         StateChanged();
     }
 
