@@ -77,7 +77,7 @@ private void HandleNewTaskRequest(string input)
     {
         if (index < 0 || index >= _shortcuts.Count)
         {
-            Console.Write("Index out of range. Press enter to try again.");
+            ConsoleExt.WriteWarning("Index out of range. Press enter to try again.");
             Console.ReadLine();
             return;
         }

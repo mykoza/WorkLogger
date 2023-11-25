@@ -43,7 +43,14 @@ public class TaskModificationMode : UiMode
     {
         if (!int.TryParse(input, out var taskIndex))
         {
-            Console.Write("Input provided is not a valid index. Press enter to try again.");
+            ConsoleExt.WriteWarning("Input provided is not a valid index. Press enter to try again.");
+            Console.ReadLine();
+            return;
+        }
+
+        if (taskIndex < 0 || taskIndex >= _workLog.Tasks.Count)
+        {
+            ConsoleExt.WriteWarning("Index out of range. Press enter to try again.");
             Console.ReadLine();
             return;
         }
@@ -69,7 +76,8 @@ public class TaskModificationMode : UiMode
 
                 if (!DateTime.TryParse(startModificationInput, out DateTime tryStart))
                 {
-                    Console.WriteLine("Input provided is not a valid date. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid date. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
 
@@ -83,7 +91,8 @@ public class TaskModificationMode : UiMode
 
                 if (!DateTime.TryParse(endModificationInput, out DateTime tryEnd))
                 {
-                    Console.WriteLine("Input provided is not a valid date. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid date. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
 
@@ -98,7 +107,8 @@ public class TaskModificationMode : UiMode
 
                 if (!TimeSpan.TryParse(durationModificationInput, out duration))
                 {
-                    Console.WriteLine("Input provided is not a valid duration. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid duration. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
             }
@@ -111,7 +121,8 @@ public class TaskModificationMode : UiMode
 
                 if (!TimeSpan.TryParse(durationModificationInput, out duration))
                 {
-                    Console.WriteLine("Input provided is not a valid duration. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid duration. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
             }

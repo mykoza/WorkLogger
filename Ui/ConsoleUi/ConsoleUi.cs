@@ -106,7 +106,7 @@ public class ConsoleUi
 
     private string? AskForExitConfirmation()
     {
-        ConsoleExt.WriteColor("Are you sure you want to quit the application? (y/n): ", ConsoleColor.Yellow);
+        ConsoleExt.WriteWarning("Are you sure you want to quit the application? (y/n): ");
         return Console.ReadLine();
     }
 
