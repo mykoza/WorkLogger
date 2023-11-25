@@ -74,6 +74,11 @@ public class TaskModificationMode : UiMode
                 Console.WriteLine($"Modifying start. Currently set to: {v}");
                 var startModificationInput = Console.ReadLine();
 
+                if (startModificationInput is not null && startModificationInput.Length == 5 && startModificationInput[2] == ':')
+                {
+                    startModificationInput = startModificationInput + ":00";
+                }
+
                 if (!DateTime.TryParse(startModificationInput, out DateTime tryStart))
                 {
                     ConsoleExt.WriteWarning("Input provided is not a valid date. Press enter to try again.");
@@ -88,6 +93,11 @@ public class TaskModificationMode : UiMode
                 string v = task.End?.ToString("yyyy-MM-dd HH:mm:ss") ?? string.Empty;
                 Console.WriteLine($"Modifying end. Currently set to: {v}");
                 var endModificationInput = Console.ReadLine();
+
+                if (endModificationInput is not null && endModificationInput.Length == 5 && endModificationInput[2] == ':')
+                {
+                    endModificationInput = endModificationInput + ":00";
+                }
 
                 if (!DateTime.TryParse(endModificationInput, out DateTime tryEnd))
                 {
