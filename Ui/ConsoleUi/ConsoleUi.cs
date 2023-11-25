@@ -1,3 +1,4 @@
+using WorkLogger.Application;
 using WorkLogger.Domain;
 
 namespace WorkLogger.Ui.ConsoleUi;
@@ -11,11 +12,11 @@ public class ConsoleUi
     private string _taskInputModeShortcut = "i";
     private string _taskModificationModeShortcut = "m";
 
-    public ConsoleUi(WorkLog workLog, WorkLogFormatter workLogFormatter)
+    public ConsoleUi(WorkLog workLog, WorkLogFormatter workLogFormatter, string[] inputShortcuts)
     {
         _workLog = workLog;
         _workLogFormatter = workLogFormatter;
-        _inputMode = new TaskInputMode(workLog, workLogFormatter);
+        _inputMode = new TaskInputMode(workLog, workLogFormatter, inputShortcuts);
         _modificationMode = new TaskModificationMode(workLog, workLogFormatter);
     }
 

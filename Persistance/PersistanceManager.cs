@@ -52,7 +52,6 @@ public class PersistanceManager : IObserver<WorkLog>
             if (obj is not null)
             {
                 workLog.Tasks = obj.Tasks;
-                workLog.Shortcuts = obj.Shortcuts;
             }
         }
         catch (FileNotFoundException)

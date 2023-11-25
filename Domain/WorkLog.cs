@@ -8,31 +8,15 @@ public class WorkLog : IObservable<WorkLog>
     public List<WorkLogTask> Tasks { get; set; } = new();
     public TimeSpan TotalTime => Tasks.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
     public TimeSpan FullTime { get; init; } = TimeSpan.Zero;
-    public HashSet<string> Shortcuts { get; set; } = new();
     private HashSet<IObserver<WorkLog>> _observers = new();
 
     public WorkLog()
     {
     }
 
-    public WorkLog(WorkDay workDay, Settings settings)
+    public WorkLog(WorkDay workDay)
     {
         FullTime = workDay.Length;
-        Shortcuts = settings.Shortcuts.ToHashSet();
-    }
-
-    public void LogWork(string input)
-    {
-        if (int.TryParse(input, out var index))
-        {
-            AddTask(index);
-        }
-        else
-        {
-            AddTask(input);
-        }
-
-        StateChanged();
     }
     
     public void LogWork(WorkLogTask task)
@@ -59,27 +43,6 @@ public class WorkLog : IObservable<WorkLog>
             Tasks.Last().Finish();
         }
         Tasks.Add(record);
-        Shortcuts.Add(record.Name);
-    }
-
-    private void AddTask(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentException($"{nameof(name)} cannot be empty.");
-        }
-
-        AddTask(new WorkLogTask(name));
-    }
-
-    private void AddTask(int index)
-    {
-        if (index >= Shortcuts.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
-
-        AddTask(new WorkLogTask(Shortcuts.ElementAt(index)));
     }
 
     public void CloseLastTask()

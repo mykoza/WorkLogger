@@ -110,15 +110,7 @@ public class WorkLogFormatter
         return $"Total time: {total} | Remaining time: {remaining}";
     }
 
-    public string NameShortCuts()
-    {
-        var records = string.Join(
-            ", ", 
-            _workLog.Shortcuts.Select((d, i) => $"[{i}] {d}")
-        );
 
-        return $"Shortcuts: {records}";
-    }
     
     private string PreviousTasksTimes()
     {
