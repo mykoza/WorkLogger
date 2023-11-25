@@ -55,6 +55,25 @@ public class WorkLogFormatter
         return builder.ToString();
     }
 
+    public string TaskDetails(WorkLogTask task)
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine($"Name: {task.Name}");
+        builder.AppendLine($"Start: {task.Start.ToString("HH:mm:ss")}");
+
+        if (task.End is not null)
+        {
+            builder.AppendLine($"End: {task.End.Value.ToString("HH:mm:ss")}");
+            builder.AppendLine($"Duration: {FormatTimeSpan(task.Time)}");
+        }
+        else
+        {
+            builder.AppendLine($"End: None");
+        }
+
+        return builder.ToString();
+    }
+
     public string ModificationString(WorkLogTask task)
     {
         var start = task.Start.ToString("yyyy-MM-dd HH:mm:ss");
@@ -91,15 +110,7 @@ public class WorkLogFormatter
         return $"Total time: {total} | Remaining time: {remaining}";
     }
 
-    public string NameShortCuts()
-    {
-        var records = string.Join(
-            ", ", 
-            _workLog.Shortcuts.Select((d, i) => $"[{i}] {d}")
-        );
 
-        return $"Shortcuts: {records}";
-    }
     
     private string PreviousTasksTimes()
     {

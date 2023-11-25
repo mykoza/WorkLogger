@@ -6,11 +6,13 @@ public class TaskInputMode : UiMode
 {
     private readonly WorkLogFormatter _workLogFormatter;
     private readonly WorkLog _workLog;
+    private readonly HashSet<string> _shortcuts = [];
 
-    public TaskInputMode(WorkLog workLog, WorkLogFormatter workLogFormatter)
+    public TaskInputMode(WorkLog workLog, WorkLogFormatter workLogFormatter, string[] shortcuts)
     {
         _workLogFormatter = workLogFormatter;
         _workLog = workLog;
+        _shortcuts = [.. shortcuts, .. workLog.Tasks.Select(t => t.Name)];
     }
 
     public override void Run()
@@ -49,7 +51,17 @@ public class TaskInputMode : UiMode
 
     private void WriteNameShortCuts()
     {
-        Console.WriteLine(_workLogFormatter.NameShortCuts());
+        Console.WriteLine(NameShortCuts());
+    }
+
+    private string NameShortCuts()
+    {
+        var records = string.Join(
+            ", ",
+            _shortcuts.Select((d, i) => $"[{i}] {d}")
+        );
+
+        return $"Shortcuts: {records}";
     }
 
     private string AskForNewTask()
@@ -60,14 +72,24 @@ public class TaskInputMode : UiMode
 
     private void HandleNewTaskRequest(string input)
     {
-        try
+        WorkLogTask workLogTask;
+        if (int.TryParse(input, out var index))
         {
-            _workLog.LogWork(input);
+            if (index < 0 || index >= _shortcuts.Count)
+            {
+                ConsoleExt.WriteWarning("Index out of range. Press enter to try again.");
+                Console.ReadLine();
+                return;
+            }
+
+            workLogTask = new WorkLogTask(_shortcuts.ElementAt(index));
         }
-        catch (ArgumentOutOfRangeException)
+        else
         {
-            Console.Write("Index out of range. Press enter to try again.");
-            Console.ReadLine();
+            workLogTask = new WorkLogTask(input);
         }
+
+        _workLog.LogWork(workLogTask);
+        _shortcuts.Add(workLogTask.Name);
     }
 }

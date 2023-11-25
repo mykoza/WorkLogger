@@ -43,13 +43,20 @@ public class TaskModificationMode : UiMode
     {
         if (!int.TryParse(input, out var taskIndex))
         {
-            Console.Write("Input provided is not a valid index. Press enter to try again.");
+            ConsoleExt.WriteWarning("Input provided is not a valid index. Press enter to try again.");
+            Console.ReadLine();
+            return;
+        }
+
+        if (taskIndex < 0 || taskIndex >= _workLog.Tasks.Count)
+        {
+            ConsoleExt.WriteWarning("Index out of range. Press enter to try again.");
             Console.ReadLine();
             return;
         }
 
         var task = _workLog.Tasks[taskIndex];
-        Console.WriteLine(_workLogFormatter.TaskDetails(taskIndex));
+        Console.WriteLine(_workLogFormatter.TaskDetails(task));
 
         DateTime? start = default;
         DateTime? end = default;
@@ -67,9 +74,15 @@ public class TaskModificationMode : UiMode
                 Console.WriteLine($"Modifying start. Currently set to: {v}");
                 var startModificationInput = Console.ReadLine();
 
+                if (startModificationInput is not null && startModificationInput.Length == 5 && startModificationInput[2] == ':')
+                {
+                    startModificationInput = startModificationInput + ":00";
+                }
+
                 if (!DateTime.TryParse(startModificationInput, out DateTime tryStart))
                 {
-                    Console.WriteLine("Input provided is not a valid date. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid date. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
 
@@ -81,9 +94,15 @@ public class TaskModificationMode : UiMode
                 Console.WriteLine($"Modifying end. Currently set to: {v}");
                 var endModificationInput = Console.ReadLine();
 
+                if (endModificationInput is not null && endModificationInput.Length == 5 && endModificationInput[2] == ':')
+                {
+                    endModificationInput = endModificationInput + ":00";
+                }
+
                 if (!DateTime.TryParse(endModificationInput, out DateTime tryEnd))
                 {
-                    Console.WriteLine("Input provided is not a valid date. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid date. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
 
@@ -98,7 +117,8 @@ public class TaskModificationMode : UiMode
 
                 if (!TimeSpan.TryParse(durationModificationInput, out duration))
                 {
-                    Console.WriteLine("Input provided is not a valid duration. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid duration. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
             }
@@ -111,7 +131,8 @@ public class TaskModificationMode : UiMode
 
                 if (!TimeSpan.TryParse(durationModificationInput, out duration))
                 {
-                    Console.WriteLine("Input provided is not a valid duration. Press enter to try again.");
+                    ConsoleExt.WriteWarning("Input provided is not a valid duration. Press enter to try again.");
+                    Console.ReadLine();
                     continue;
                 }
             }
@@ -127,8 +148,6 @@ public class TaskModificationMode : UiMode
             changeDurationRequest = new(duration, target);
         }
 
-        // if (start is not null || end is not null || changeDurationRequest is not null)
-        // {
         var modificationRequest = new TaskTimesModificationRequest(
             start,
             end,
@@ -136,7 +155,6 @@ public class TaskModificationMode : UiMode
         );
 
         _workLog.ModifyTask(taskIndex, modificationRequest);
-        // }
     }
 
     private string AskForTaskIndex()

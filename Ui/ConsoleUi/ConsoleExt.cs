@@ -2,6 +2,8 @@ namespace WorkLogger.Ui.ConsoleUi;
 
 public static class ConsoleExt
 {
+    private static readonly ConsoleColor _warningColor = ConsoleColor.Yellow;
+
     public static void WriteColor(string text, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
     {
         var oldForeground = Console.ForegroundColor;
@@ -19,5 +21,15 @@ public static class ConsoleExt
     {
         WriteColor(text, foreground, background);
         Console.WriteLine();
+    }
+
+    public static void WriteLineWarning(string text)
+    {
+        WriteLineColor(text, _warningColor, ConsoleColor.Black);
+    }
+
+    public static void WriteWarning(string text)
+    {
+        WriteColor(text, _warningColor, ConsoleColor.Black);
     }
 }

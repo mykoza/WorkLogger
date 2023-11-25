@@ -19,32 +19,6 @@ public class WorkLogTask
         Name = name;
     }
 
-    public WorkLogTask(string name, DateTime start, DateTime end)
-    {
-        Name = name;
-        Start = start;
-        End = end;
-    }
-
-    public WorkLogTask(string name, string start, string? end, string time)
-    {
-        Name = name;
-        Start = DateTime.Parse(start);
-
-        if (end is not null)
-        {
-            End = DateTime.Parse(end);
-        }
-
-        Time = TimeSpan.Parse(time);
-    }
-
-    public void AddTime(TimeSpan time)
-    {
-        Time = Time.Add(time);
-        End = null;
-    }
-
     public void ModifyTimes(TaskTimesModificationRequest taskTimesModificationRequest)
     {
         if (taskTimesModificationRequest.Start is not null)
@@ -130,20 +104,8 @@ public class WorkLogTask
         Time = End.Value - Start;
     }
 
-    public WorkLogTask Clone()
+    public bool IsNew()
     {
-        return new WorkLogTask(Name);
-    }
-
-    public string FormatAsDuration()
-    {
-        if (Time.Hours == 0)
-        {
-            return $"{Time.Minutes}m";
-        }
-        else
-        {
-            return $"{Time.Hours}h {Time.Minutes}m";
-        }
+        return End is null && Time == TimeSpan.Zero;
     }
 }

@@ -8,61 +8,41 @@ public class WorkLog : IObservable<WorkLog>
     public List<WorkLogTask> Tasks { get; set; } = new();
     public TimeSpan TotalTime => Tasks.Aggregate(TimeSpan.Zero, (x,y) => x + y.Time);
     public TimeSpan FullTime { get; init; } = TimeSpan.Zero;
-    public HashSet<string> Shortcuts { get; set; } = new();
     private HashSet<IObserver<WorkLog>> _observers = new();
 
     public WorkLog()
     {
     }
 
-    public WorkLog(Settings settings)
+    public WorkLog(WorkDay workDay)
     {
-        FullTime = new TimeSpan(0, settings.WorkdayInMinutes, 0);
-        Shortcuts = settings.Shortcuts.ToHashSet();
+        FullTime = workDay.Length;
     }
-
-    public void LogWork(string input)
+    
+    public void LogWork(WorkLogTask task)
     {
-        if (int.TryParse(input, out var index))
+        if (!task.IsNew())
         {
-            AddRecord(index);
+            throw new ArgumentException("Task is not new.");
         }
-        else
+
+        if (task.Start < Tasks.Max(x => x.End))
         {
-            AddRecord(input);
+            throw new ArgumentException("Task start time is before previous task end time.");
         }
+
+        AddTask(task);
 
         StateChanged();
     }
 
-    private void AddRecord(WorkLogTask record)
+    private void AddTask(WorkLogTask record)
     {
         if (Tasks.Count > 0)
         {
             Tasks.Last().Finish();
         }
         Tasks.Add(record);
-        Shortcuts.Add(record.Name);
-    }
-
-    private void AddRecord(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentException($"{nameof(name)} cannot be empty.");
-        }
-
-        AddRecord(new WorkLogTask(name));
-    }
-
-    private void AddRecord(int index)
-    {
-        if (index >= Shortcuts.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
-
-        AddRecord(new WorkLogTask(Shortcuts.ElementAt(index)));
     }
 
     public void CloseLastTask()
@@ -71,6 +51,7 @@ public class WorkLog : IObservable<WorkLog>
         {
             Tasks.Last().Finish();
         }
+
         StateChanged();
     }
 
