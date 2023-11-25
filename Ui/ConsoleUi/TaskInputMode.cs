@@ -70,26 +70,26 @@ public class TaskInputMode : UiMode
         return Console.ReadLine() ?? string.Empty;
     }
 
-private void HandleNewTaskRequest(string input)
-{
-    WorkLogTask workLogTask;
-    if (int.TryParse(input, out var index))
+    private void HandleNewTaskRequest(string input)
     {
-        if (index < 0 || index >= _shortcuts.Count)
+        WorkLogTask workLogTask;
+        if (int.TryParse(input, out var index))
         {
-            ConsoleExt.WriteWarning("Index out of range. Press enter to try again.");
-            Console.ReadLine();
-            return;
+            if (index < 0 || index >= _shortcuts.Count)
+            {
+                ConsoleExt.WriteWarning("Index out of range. Press enter to try again.");
+                Console.ReadLine();
+                return;
+            }
+
+            workLogTask = new WorkLogTask(_shortcuts.ElementAt(index));
+        }
+        else
+        {
+            workLogTask = new WorkLogTask(input);
         }
 
-        workLogTask = new WorkLogTask(_shortcuts.ElementAt(index));
+        _workLog.LogWork(workLogTask);
+        _shortcuts.Add(workLogTask.Name);
     }
-    else
-    {
-        workLogTask = new WorkLogTask(input);
-    }
-
-    _workLog.LogWork(workLogTask);
-    _shortcuts.Add(workLogTask.Name);
-}
 }
